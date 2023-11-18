@@ -17,7 +17,7 @@ model User {
   user_id        Int         @id @default(autoincrement())
   username       String
   password_hash  String
-  email          String
+  email          String      @unique
   created_events Event[]     @relation("created_by")
   participations UserEvent[] @relation("participants")
   comments       Comment[]   @relation("user_comments")
@@ -30,7 +30,7 @@ model Event {
   description  String
   location     String
   date         DateTime
-  time         String
+  created_at   DateTime    @default(now())
   creator      User        @relation("created_by", fields: [creator_id], references: [user_id])
   creator_id   Int
   participants UserEvent[] @relation("event_participants")
@@ -46,6 +46,8 @@ model UserEvent {
   user     User      @relation("participants", fields: [user_id], references: [user_id])
   event    Event     @relation("event_participants", fields: [event_id], references: [event_id])
   comments Comment[] @relation("user_event_comments")
+
+  @@unique([user_id, event_id])
 }
 
 // Define the Comment table

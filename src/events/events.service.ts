@@ -21,7 +21,6 @@ export class EventsService {
         description,
         location,
         title,
-        time: '00:00',
       },
     });
   }

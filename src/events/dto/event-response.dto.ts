@@ -4,6 +4,5 @@ export class EventResponseDto {
   description: string;
   location: string;
   date: Date;
-  time: string;
   creator_id: number;
 }
