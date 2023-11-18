@@ -97,25 +97,37 @@ export class UsersService {
   async update(
     user_id: number,
     updateUserDto: UpdateUserDto,
+    request: any,
   ): Promise<OutputDto<UserResponseDto>> {
-    // TODO: get the user from token
-    // only the user himself can change his data
+    this._validateUserToken(user_id, request);
+
     const updatedUser = await this.prismaService.user.update({
       where: { user_id },
       data: updateUserDto,
     });
 
+    // TODO: hash password
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password_hash, ...data } = updatedUser;
 
     return { data };
   }
 
-  async remove(user_id: number): Promise<any> {
+  async remove(user_id: number, request: any): Promise<any> {
+    this._validateUserToken(user_id, request);
+
     const response = await this.prismaService.user.delete({
       where: { user_id },
     });
 
     return response;
+  }
+
+  _validateUserToken(id: number, request: any) {
+    if (request?.user?.sub != id) {
+      throw new InvalidOperationError(
+        'You are not allowed to do this operation.',
+      );
+    }
   }
 }

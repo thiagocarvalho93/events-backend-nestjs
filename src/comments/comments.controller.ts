@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -40,13 +41,17 @@ export class CommentsController {
 
   @ApiOperation({ summary: 'Update the comment.' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @Req() request: any,
+  ) {
+    return this.commentsService.update(+id, updateCommentDto, request);
   }
 
   @ApiOperation({ summary: 'Delete the comment with the id.' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+  remove(@Param('id') id: string, @Req() request: any) {
+    return this.commentsService.remove(+id, request);
   }
 }

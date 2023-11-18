@@ -6,6 +6,7 @@ import { PaginatedOutputDto } from 'src/prisma/dto/paginated-output.dto';
 import { EventQueryDto } from './dto/event-query.dto';
 import { EventResponseDto } from './dto/event-response.dto';
 import { OutputDto } from 'src/prisma/dto/output.dto';
+import { InvalidOperationError } from 'src/errors/invalid-operation-error';
 
 // TODO: put up a better way to deal with incoming dates!
 @Injectable()
@@ -76,10 +77,13 @@ export class EventsService {
   async update(
     id: number,
     updateEventDto: UpdateEventDto,
+    request: any,
   ): Promise<OutputDto<EventResponseDto>> {
-    await this.prismaService.event.findFirstOrThrow({
+    const event = await this.prismaService.event.findFirstOrThrow({
       where: { event_id: id },
     });
+
+    this._validateUserToken(event.creator_id, request);
 
     const data = await this.prismaService.event.update({
       where: { event_id: id },
@@ -89,15 +93,26 @@ export class EventsService {
     return { data };
   }
 
-  async remove(id: number): Promise<OutputDto<EventResponseDto>> {
-    await this.prismaService.event.findFirstOrThrow({
+  async remove(id: number, request: any): Promise<OutputDto<EventResponseDto>> {
+    const event = await this.prismaService.event.findFirstOrThrow({
       where: { event_id: id },
     });
+
+    // Only the event creator can delete it
+    this._validateUserToken(event.creator_id, request);
 
     const data = await this.prismaService.event.delete({
       where: { event_id: id },
     });
 
     return { data };
+  }
+
+  _validateUserToken(id: number, request: any) {
+    if (request?.user?.sub != id) {
+      throw new InvalidOperationError(
+        'You are not allowed to do this operation.',
+      );
+    }
   }
 }

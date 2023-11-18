@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -41,13 +42,17 @@ export class EventsController {
 
   @ApiOperation({ summary: 'Update the event information.' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(+id, updateEventDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateEventDto: UpdateEventDto,
+    @Req() request: any,
+  ) {
+    return this.eventsService.update(+id, updateEventDto, request);
   }
 
   @ApiOperation({ summary: 'Delete the event with the id.' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventsService.remove(+id);
+  remove(@Param('id') id: string, @Req() request: any) {
+    return this.eventsService.remove(+id, request);
   }
 }

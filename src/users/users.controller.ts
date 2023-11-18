@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -44,14 +45,18 @@ export class UsersController {
   @Patch(':id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update the user information.' })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() request: any,
+  ) {
+    return this.usersService.update(+id, updateUserDto, request);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete the user with the id.' })
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id') id: string, @Req() request: any) {
+    return this.usersService.remove(+id, request);
   }
 }
