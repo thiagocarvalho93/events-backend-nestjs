@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDateString,
   IsInt,
@@ -7,18 +8,30 @@ import {
 } from 'class-validator';
 
 export class CreateEventDto {
+  @ApiProperty({
+    type: String,
+  })
   @IsNotEmpty()
   @IsString()
   title: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @IsNotEmpty()
   @IsString()
   description: string;
 
+  @ApiProperty({
+    type: String,
+  })
   @IsNotEmpty()
   @IsString()
   location: string;
 
+  @ApiProperty({
+    type: Date,
+  })
   @IsNotEmpty()
   @IsDateString()
   date: Date;
@@ -28,6 +41,9 @@ export class CreateEventDto {
   // @Matches(/^(1[0-2]|0?[1-9]):([0-5]?[0-9])$/)
   // time: string;
 
+  @ApiProperty({
+    type: Number,
+  })
   @IsNotEmpty()
   @IsInt()
   @Min(1)

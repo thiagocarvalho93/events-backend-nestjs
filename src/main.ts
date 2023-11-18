@@ -17,6 +17,7 @@ async function bootstrap() {
 
   // swagger
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Ecommerce API')
     .setDescription('An ecommerce API made with NestJS.')
     .setVersion('1.0')

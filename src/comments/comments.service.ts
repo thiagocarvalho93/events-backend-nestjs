@@ -16,6 +16,8 @@ export class CommentsService {
     text,
     user_id,
   }: CreateCommentDto): Promise<OutputDto<CommentResponseDto>> {
+    await this.checkEventAndOrUser(event_id, user_id);
+
     const data = await this.prismaService.comment.create({
       data: {
         text,
@@ -31,16 +33,26 @@ export class CommentsService {
     query: CommentQueryDto,
   ): Promise<PaginatedOutputDto<CommentResponseDto>> {
     const { page = '1', limit = '10' } = query;
-    const page_size = parseInt(limit, 10);
-    const current_page = parseInt(page, 10);
+    const page_size = +limit;
+    const current_page = +page;
+    let { event_id, user_id } = query;
+    event_id = +event_id;
+    user_id = +user_id;
 
-    // TODO: query, sorting
+    await this.checkEventAndOrUser(event_id, user_id);
+
+    const where = {
+      ...(event_id ? { event_id } : {}),
+      ...(user_id ? { user_id } : {}),
+    };
+
     const [data, total_records] = await Promise.all([
       this.prismaService.comment.findMany({
+        where,
         skip: (current_page - 1) * page_size,
         take: page_size,
       }),
-      this.prismaService.comment.count(),
+      this.prismaService.comment.count({ where }),
     ]);
 
     return {
@@ -88,5 +100,16 @@ export class CommentsService {
     });
 
     return { data };
+  }
+
+  async checkEventAndOrUser(event_id: number, user_id: number) {
+    const promises = [
+      event_id &&
+        this.prismaService.event.findFirstOrThrow({ where: { event_id } }),
+      user_id &&
+        this.prismaService.user.findFirstOrThrow({ where: { user_id } }),
+    ].filter(Boolean); // Remove falsy values (null or undefined)
+
+    await Promise.all(promises);
   }
 }

@@ -29,16 +29,31 @@ export class EventsService {
   async findAll(
     query: EventQueryDto,
   ): Promise<PaginatedOutputDto<EventResponseDto>> {
-    const { page = '1', limit = '10' } = query;
-    const page_size = parseInt(limit, 10);
-    const current_page = parseInt(page, 10);
+    const { page = '1', limit = '10', location, title } = query;
+    const page_size = +limit;
+    const current_page = +page;
 
+    let { creator_id } = query;
+    creator_id = +creator_id;
+
+    if (creator_id) {
+      await this.prismaService.user.findFirstOrThrow({
+        where: { user_id: creator_id },
+      });
+    }
+
+    const where = {
+      ...(creator_id ? { creator_id } : {}),
+      ...(title ? { title: { contains: title } } : {}),
+      ...(location ? { title: { equals: location } } : {}),
+    };
     const [events, total_records] = await Promise.all([
       this.prismaService.event.findMany({
+        where,
         skip: (current_page - 1) * page_size,
         take: page_size,
       }),
-      this.prismaService.event.count(),
+      this.prismaService.event.count({ where }),
     ]);
 
     return {
