@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaExceptionFilter } from './exception-filters/prisma.exception-filter';
-import { InvalidRelationExceptionFilter } from './exception-filters/invalid-relation.exception-filter';
+import { InvalidOperationExceptionFilter } from './exception-filters/invalid-operation.exception-filter';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,7 +11,7 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalFilters(
     new PrismaExceptionFilter(),
-    new InvalidRelationExceptionFilter(),
+    new InvalidOperationExceptionFilter(),
   );
   app.useGlobalPipes(new ValidationPipe());
 

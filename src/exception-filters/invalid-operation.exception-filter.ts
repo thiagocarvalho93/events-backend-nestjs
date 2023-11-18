@@ -1,9 +1,9 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { InvalidRelationError } from 'src/errors/invalid-relation-error';
+import { InvalidOperationError } from 'src/errors/invalid-operation-error';
 
-@Catch(InvalidRelationError)
-export class InvalidRelationExceptionFilter implements ExceptionFilter {
-  catch(exception: InvalidRelationError, host: ArgumentsHost) {
+@Catch(InvalidOperationError)
+export class InvalidOperationExceptionFilter implements ExceptionFilter {
+  catch(exception: InvalidOperationError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 

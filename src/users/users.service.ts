@@ -34,17 +34,19 @@ export class UsersService {
   async findAll(
     query: UserQueryDto,
   ): Promise<PaginatedOutputDto<UserResponseDto>> {
-    const { page = '1', limit = '10' } = query;
+    const { page = '1', limit = '10', username } = query;
     const page_size = parseInt(limit, 10);
     const current_page = parseInt(page, 10);
 
-    // TODO: query, sorting
+    const where = { ...(username ? { username: { contains: username } } : {}) };
+    // TODO: sorting
     const [users, total_records] = await Promise.all([
       this.prismaService.user.findMany({
+        where,
         skip: (current_page - 1) * page_size,
         take: page_size,
       }),
-      this.prismaService.user.count(),
+      this.prismaService.user.count({ where }),
     ]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
