@@ -101,12 +101,21 @@ export class UsersService {
   ): Promise<OutputDto<UserResponseDto>> {
     this._validateUserToken(user_id, request);
 
+    let hashedPassword = '';
+    if (updateUserDto.password) {
+      hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
+    const update = {
+      ...(updateUserDto.email ? { email: updateUserDto.email } : {}),
+      ...(updateUserDto.password ? { password_hash: hashedPassword } : {}),
+      ...(updateUserDto.username ? { username: updateUserDto.username } : {}),
+    };
     const updatedUser = await this.prismaService.user.update({
       where: { user_id },
-      data: updateUserDto,
+      data: update,
     });
 
-    // TODO: hash password
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password_hash, ...data } = updatedUser;
 
