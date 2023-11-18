@@ -1,5 +1,6 @@
 *.db
 /prisma/migrations
+.env
 
 # compiled output
 /dist
