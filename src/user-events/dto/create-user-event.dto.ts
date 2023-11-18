@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsPositive, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsPositive } from 'class-validator';
+import { UserEventStatus } from './status.enum';
 
 export class CreateUserEventDto {
   @ApiProperty({
@@ -18,10 +19,11 @@ export class CreateUserEventDto {
   @IsPositive()
   event_id: number;
 
-  @ApiProperty({
-    type: String,
-  })
   @IsNotEmpty()
-  @IsString()
-  status: string;
+  @ApiProperty({
+    enum: UserEventStatus,
+    example: Object.values(UserEventStatus),
+  })
+  @IsEnum(UserEventStatus)
+  status: UserEventStatus;
 }

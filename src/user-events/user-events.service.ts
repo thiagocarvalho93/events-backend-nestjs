@@ -91,21 +91,20 @@ export class UserEventsService {
   async updateStatus({ event_id, status, user_id }: CreateUserEventDto) {
     await this.checkEventAndOrUser(event_id, user_id);
 
-    const { id, status: statusBefore } =
-      await this.prismaService.userEvent.findFirst({
-        where: { event_id, user_id },
-      });
+    const participation = await this.prismaService.userEvent.findFirst({
+      where: { event_id, user_id },
+    });
 
-    if (!id) {
+    if (!participation) {
       throw new InvalidOperationError('User not added to event.');
     }
 
-    if (status === statusBefore) {
+    if (status === participation.status) {
       throw new InvalidOperationError(`Status already ${status}.`);
     }
 
-    const data = this.prismaService.userEvent.update({
-      where: { id },
+    const data = await this.prismaService.userEvent.update({
+      where: { id: participation.id },
       data: { event_id, user_id, status },
     });
 

@@ -14,7 +14,7 @@ export class SignInDto {
 
   @ApiProperty({
     type: String,
-    default: '1234',
+    default: '123456',
   })
   @IsNotEmpty()
   @IsString()
