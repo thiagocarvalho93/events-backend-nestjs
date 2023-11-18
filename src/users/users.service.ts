@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UserQueryDto } from './dto/user-query.dto';
-import { PaginatedOutputDto } from 'src/prisma/prisma/dto/paginated-output.dto';
+import { PaginatedOutputDto } from 'src/prisma/dto/paginated-output.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { OutputDto } from 'src/prisma/prisma/dto/output.dto';
+import { OutputDto } from 'src/prisma/dto/output.dto';
 import { InvalidOperationError } from 'src/errors/invalid-operation-error';
 
 @Injectable()
@@ -17,11 +17,11 @@ export class UsersService {
   ): Promise<OutputDto<UserResponseDto>> {
     const { email, password, username } = createUserDto;
 
-    const { user_id } = await this.prismaService.user.findFirst({
+    const exists = await this.prismaService.user.findFirst({
       where: { email },
     });
 
-    if (user_id) {
+    if (exists) {
       throw new InvalidOperationError('This email is already in use.');
     }
 
