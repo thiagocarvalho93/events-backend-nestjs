@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+
+// Define the User table
+model User {
+  user_id        Int         @id @default(autoincrement())
+  username       String
+  password_hash  String
+  email          String
+  created_events Event[]     @relation("created_by")
+  participations UserEvent[] @relation("participants")
+  comments       Comment[]   @relation("user_comments")
+}
+
+// Define the Event table
+model Event {
+  event_id     Int         @id @default(autoincrement())
+  title        String
+  description  String
+  location     String
+  date         DateTime
+  time         String
+  creator      User        @relation("created_by", fields: [creator_id], references: [user_id])
+  creator_id   Int
+  participants UserEvent[] @relation("event_participants")
+  comments     Comment[]   @relation("event_comments")
+}
+
+// Define the UserEvent table as a junction table
+model UserEvent {
+  id       Int       @id @default(autoincrement())
+  status   String
+  user_id  Int
+  event_id Int
+  user     User      @relation("participants", fields: [user_id], references: [user_id])
+  event    Event     @relation("event_participants", fields: [event_id], references: [event_id])
+  comments Comment[] @relation("user_event_comments")
+}
+
+// Define the Comment table
+model Comment {
+  comment_id    Int        @id @default(autoincrement())
+  text          String
+  created_at    DateTime   @default(now())
+  user_id       Int
+  event_id      Int
+  user          User       @relation("user_comments", fields: [user_id], references: [user_id])
+  event         Event      @relation("event_comments", fields: [event_id], references: [event_id])
+  user_event    UserEvent? @relation("user_event_comments", fields: [user_event_id], references: [id])
+  user_event_id Int?
+}
