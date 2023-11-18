@@ -36,11 +36,6 @@ export class CreateEventDto {
   @IsDateString()
   date: Date;
 
-  // @IsNotEmpty()
-  // @IsString()
-  // @Matches(/^(1[0-2]|0?[1-9]):([0-5]?[0-9])$/)
-  // time: string;
-
   @ApiProperty({
     type: Number,
   })
