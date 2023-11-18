@@ -4,6 +4,7 @@ import { UserEventQueryDto } from './dto/user-event-query.dto';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { InvalidOperationError } from 'src/errors/invalid-operation-error';
 
+// TODO: enum for status
 @Injectable()
 export class UserEventsService {
   constructor(private prismaService: PrismaService) {}

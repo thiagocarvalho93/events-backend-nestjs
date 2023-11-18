@@ -17,6 +17,7 @@ model User {
   user_id        Int         @id @default(autoincrement())
   username       String
   password_hash  String
+  created_at     DateTime    @default(now())
   email          String      @unique
   created_events Event[]     @relation("created_by")
   participations UserEvent[] @relation("participants")

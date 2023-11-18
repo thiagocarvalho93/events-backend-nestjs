@@ -18,12 +18,15 @@ async function bootstrap() {
   // swagger
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('Ecommerce API')
-    .setDescription('An ecommerce API made with NestJS.')
+    .setTitle('Events API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      tagsSorter: 'alpha',
+    },
+  });
 
   await app.listen(3000);
 }
