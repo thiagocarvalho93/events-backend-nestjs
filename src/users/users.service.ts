@@ -7,6 +7,7 @@ import { UserQueryDto } from './dto/user-query.dto';
 import { PaginatedOutputDto } from 'src/prisma/prisma/dto/paginated-output.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { OutputDto } from 'src/prisma/prisma/dto/output.dto';
+import { InvalidOperationError } from 'src/errors/invalid-operation-error';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,15 @@ export class UsersService {
     createUserDto: CreateUserDto,
   ): Promise<OutputDto<UserResponseDto>> {
     const { email, password, username } = createUserDto;
+
+    const { user_id } = await this.prismaService.user.findFirst({
+      where: { email },
+    });
+
+    if (user_id) {
+      throw new InvalidOperationError('This email is already in use.');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.prismaService.user.create({
