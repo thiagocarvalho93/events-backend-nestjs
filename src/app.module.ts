@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from './database/prisma/prisma.module';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './models/users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { EventsModule } from './events/events.module';
-import { CommentsModule } from './comments/comments.module';
-import { UserEventsModule } from './user-events/user-events.module';
+import { EventsModule } from './models/events/events.module';
+import { CommentsModule } from './models/comments/comments.module';
+import { UserEventsModule } from './models/user-events/user-events.module';
 
 @Module({
   imports: [
