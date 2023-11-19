@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { InvalidOperationError } from 'src/errors/invalid-operation-error';
+import { InvalidOperationError } from 'src/common/errors/invalid-operation-error';
 
 @Catch(InvalidOperationError)
 export class InvalidOperationExceptionFilter implements ExceptionFilter {

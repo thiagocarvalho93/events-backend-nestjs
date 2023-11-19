@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaExceptionFilter } from './exception-filters/prisma.exception-filter';
-import { InvalidOperationExceptionFilter } from './exception-filters/invalid-operation.exception-filter';
+import { PrismaExceptionFilter } from './common/exception-filters/prisma.exception-filter';
+import { InvalidOperationExceptionFilter } from './common/exception-filters/invalid-operation.exception-filter';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';

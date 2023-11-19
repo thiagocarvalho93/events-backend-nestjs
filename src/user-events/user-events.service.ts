@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserEventDto } from './dto/create-user-event.dto';
 import { UserEventQueryDto } from './dto/user-event-query.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { InvalidOperationError } from 'src/errors/invalid-operation-error';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { InvalidOperationError } from 'src/common/errors/invalid-operation-error';
 
 // TODO: enum for status
 @Injectable()

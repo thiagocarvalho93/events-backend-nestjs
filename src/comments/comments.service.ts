@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { OutputDto } from 'src/prisma/dto/output.dto';
+import { OutputDto } from 'src/common/dto/output.dto';
 import { CommentResponseDto } from './dto/comment-response.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PaginatedOutputDto } from 'src/prisma/dto/paginated-output.dto';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { PaginatedOutputDto } from 'src/common/dto/paginated-output.dto';
 import { CommentQueryDto } from './dto/comment-query.dto';
-import { InvalidOperationError } from 'src/errors/invalid-operation-error';
+import { InvalidOperationError } from 'src/common/errors/invalid-operation-error';
 
 @Injectable()
 export class CommentsService {

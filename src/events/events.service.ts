@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PaginatedOutputDto } from 'src/prisma/dto/paginated-output.dto';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { PaginatedOutputDto } from 'src/common/dto/paginated-output.dto';
 import { EventQueryDto } from './dto/event-query.dto';
 import { EventResponseDto } from './dto/event-response.dto';
-import { OutputDto } from 'src/prisma/dto/output.dto';
-import { InvalidOperationError } from 'src/errors/invalid-operation-error';
+import { OutputDto } from 'src/common/dto/output.dto';
+import { InvalidOperationError } from 'src/common/errors/invalid-operation-error';
 
 // TODO: put up a better way to deal with incoming dates!
 @Injectable()

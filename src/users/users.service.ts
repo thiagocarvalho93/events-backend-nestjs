@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/database/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UserQueryDto } from './dto/user-query.dto';
-import { PaginatedOutputDto } from 'src/prisma/dto/paginated-output.dto';
+import { PaginatedOutputDto } from 'src/common/dto/paginated-output.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { OutputDto } from 'src/prisma/dto/output.dto';
-import { InvalidOperationError } from 'src/errors/invalid-operation-error';
+import { OutputDto } from 'src/common/dto/output.dto';
+import { InvalidOperationError } from 'src/common/errors/invalid-operation-error';
 
 @Injectable()
 export class UsersService {
