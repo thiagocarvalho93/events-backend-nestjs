@@ -29,7 +29,14 @@ export class EventsService {
   async findAll(
     query: EventQueryDto,
   ): Promise<PaginatedOutputDto<EventResponseDto>> {
-    const { page = '1', limit = '10', location, title } = query;
+    const {
+      page = '1',
+      limit = '10',
+      location,
+      title,
+      sort_by,
+      order_by,
+    } = query;
     const page_size = +limit;
     const current_page = +page;
 
@@ -42,14 +49,19 @@ export class EventsService {
       });
     }
 
+    const orderByKeys = ['title', 'date', 'created_at', 'event_id', 'location'];
+    const isValidOrderBy = sort_by && orderByKeys.includes(sort_by);
+    const orderBy = isValidOrderBy ? { [sort_by]: order_by || 'asc' } : {};
+
     const where = {
       ...(creator_id ? { creator_id } : {}),
       ...(title ? { title: { contains: title } } : {}),
-      ...(location ? { title: { equals: location } } : {}),
+      ...(location ? { title: { contains: location } } : {}),
     };
     const [events, total_records] = await Promise.all([
       this.prismaService.event.findMany({
         where,
+        orderBy,
         skip: (current_page - 1) * page_size,
         take: page_size,
       }),

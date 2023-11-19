@@ -44,15 +44,20 @@ export class UsersService {
   async findAll(
     query: UserQueryDto,
   ): Promise<PaginatedOutputDto<UserResponseDto>> {
-    const { page = '1', limit = '10', username } = query;
+    const { page = '1', limit = '10', username, order_by, sort_by } = query;
     const page_size = parseInt(limit, 10);
     const current_page = parseInt(page, 10);
 
     const where = { ...(username ? { username: { contains: username } } : {}) };
-    // TODO: sorting
+
+    const orderByKeys = ['username', 'user_id'];
+    const isValidOrderBy = sort_by && orderByKeys.includes(sort_by);
+    const orderBy = isValidOrderBy ? { [sort_by]: order_by || 'asc' } : {};
+
     const [users, total_records] = await Promise.all([
       this.prismaService.user.findMany({
         where,
+        orderBy,
         skip: (current_page - 1) * page_size,
         take: page_size,
       }),

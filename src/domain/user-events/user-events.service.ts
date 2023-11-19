@@ -4,7 +4,6 @@ import { UserEventQueryDto } from './dto/user-event-query.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { InvalidOperationError } from 'src/common/errors/invalid-operation-error';
 
-// TODO: enum for status
 @Injectable()
 export class UserEventsService {
   constructor(private prismaService: PrismaService) {}
@@ -32,7 +31,7 @@ export class UserEventsService {
   }
 
   async findAll(query: UserEventQueryDto) {
-    const { page = '1', limit = '10' } = query;
+    const { page = '1', limit = '10', order_by, sort_by } = query;
     const page_size = +limit;
     const current_page = +page;
 
@@ -41,6 +40,10 @@ export class UserEventsService {
     user_id = +user_id;
 
     await this.checkEventAndOrUser(event_id, user_id);
+
+    const orderByKeys = ['id', 'status', 'user_id', 'event_id'];
+    const isValidOrderBy = sort_by && orderByKeys.includes(sort_by);
+    const orderBy = isValidOrderBy ? { [sort_by]: order_by || 'asc' } : {};
 
     const where = {
       ...(event_id ? { event_id } : {}),
@@ -51,6 +54,7 @@ export class UserEventsService {
         where,
         skip: (current_page - 1) * page_size,
         take: page_size,
+        orderBy,
       }),
       this.prismaService.userEvent.count({ where }),
     ]);

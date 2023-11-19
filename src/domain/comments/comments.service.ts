@@ -33,7 +33,7 @@ export class CommentsService {
   async findAll(
     query: CommentQueryDto,
   ): Promise<PaginatedOutputDto<CommentResponseDto>> {
-    const { page = '1', limit = '10' } = query;
+    const { page = '1', limit = '10', order_by, sort_by } = query;
     const page_size = +limit;
     const current_page = +page;
     let { event_id, user_id } = query;
@@ -41,6 +41,10 @@ export class CommentsService {
     user_id = +user_id;
 
     await this._checkEventAndOrUser(event_id, user_id);
+
+    const orderByKeys = ['comment_id', 'created_at', 'user_id', 'event_id'];
+    const isValidOrderBy = sort_by && orderByKeys.includes(sort_by);
+    const orderBy = isValidOrderBy ? { [sort_by]: order_by || 'asc' } : {};
 
     const where = {
       ...(event_id ? { event_id } : {}),
@@ -52,6 +56,7 @@ export class CommentsService {
         where,
         skip: (current_page - 1) * page_size,
         take: page_size,
+        orderBy,
       }),
       this.prismaService.comment.count({ where }),
     ]);

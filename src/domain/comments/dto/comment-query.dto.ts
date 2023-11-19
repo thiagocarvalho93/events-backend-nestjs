@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumberString, IsOptional } from 'class-validator';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { PaginationSortQueryDto } from 'src/common/dto/pagination-query.dto';
 
-export class CommentQueryDto extends PaginationQueryDto {
+export class CommentQueryDto extends PaginationSortQueryDto {
   @ApiProperty({
     type: Number,
     required: false,
